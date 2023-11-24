@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 interface Category {
@@ -65,6 +66,9 @@ function Home() {
       <p data-testid="home-initial-message">
         Digite algum termo de pesquisa ou escolha uma categoria.
       </p>
+      <Link to="/carrinho" data-testid="shopping-cart-button">
+        Carrinho de Compras
+      </Link>
     </div>
   );
 }
