@@ -10,6 +10,7 @@ function Home() {
   const [categoriesList, setCategoriesList] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [productList, setProductList] = useState<[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -29,20 +30,37 @@ function Home() {
   const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
-
   const handleSearch = async () => {
-    const searchData = await
-    getProductsFromCategoryAndQuery(selectedCategory, searchQuery);
-    if (searchData) {
-      console.log('Resultado da pesquisa:', searchData);
+    try {
+      const searchData = await
+      getProductsFromCategoryAndQuery(selectedCategory, searchQuery);
+
+      if (searchData.results.length === 0) {
+        setProductList([]);
+      } else {
+        setProductList(searchData.results);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar produtos por texto', error);
+      setProductList([]);
     }
   };
 
   return (
-    <div>
-      <input type="text" onChange={ handleSearchInputChange } value={ searchQuery } />
-      <button onClick={ handleSearch }>Pesquisar</button>
+    <>
+      <input
+        data-testid="query-input"
+        type="text"
+        onChange={ handleSearchInputChange }
+        value={ searchQuery }
+      />
+      <button
+        data-testid="query-button"
+        onClick={ handleSearch }
+      >
+        Pesquisar
 
+      </button>
       <h2>Categorias</h2>
       <ul>
         {categoriesList.map((category: Category) => (
@@ -62,10 +80,27 @@ function Home() {
         ))}
       </ul>
 
-      <p data-testid="home-initial-message">
-        Digite algum termo de pesquisa ou escolha uma categoria.
-      </p>
-    </div>
+      {productList.length === 0 ? (
+        <p data-testid="home-initial-message">
+          Digite algum termo de pesquisa ou escolha uma categoria.
+        </p>
+      ) : (
+        <div>
+          {productList.map((product: Product) => (
+            <div key={ product.id } data-testid="product">
+              <img src={ product.thumbnail } alt={ product.title } />
+              <h2>{product.title }</h2>
+              <p>
+                Preço: $
+                {product.price}
+              </p>
+            </div>
+          ))}
+
+        </div>
+
+      )}
+    </>
   );
 }
 
