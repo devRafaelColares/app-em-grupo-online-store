@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
+import CategoryList from '../components/CategoryList';
+import ProductList from '../components/ProductList';
 
 interface Category {
   id: string;
@@ -59,41 +61,17 @@ function Home() {
       <button onClick={ handleSearch } data-testid="query-button">Pesquisar</button>
 
       <h2>Categorias</h2>
-      <ul>
-        {categoriesList.map((category: Category) => (
-          <li key={ category.id }>
-            <label htmlFor={ `category-${category.id}` } key={ category.id }>
-              <input
-                type="radio"
-                id={ `category-${category.id}` }
-                name="category"
-                onChange={ () => handleCategoryChange(category.id) }
-                checked={ selectedCategory === category.id }
-                data-testid="category"
-              />
-              {category.name}
-            </label>
-          </li>
-        ))}
-      </ul>
+      <CategoryList
+        categories={ categoriesList }
+        selectedCategory={ selectedCategory }
+        onCategoryChange={ handleCategoryChange }
+      />
       {productList.length === 0 ? (
         <p data-testid="home-initial-message">
           Digite algum termo de pesquisa ou escolha uma categoria.
         </p>
       ) : (
-        <div>
-          {productList.map((product: any) => (
-            <div key={ product.id } data-testid="product">
-              <img src={ product.thumbnail } alt={ product.title } />
-              <h2>{product.title }</h2>
-              <p>
-                Preço: $
-                {product.price}
-              </p>
-            </div>
-          ))}
-
-        </div>
+        <ProductList productList={ productList } />
 
       )}
       <Link to="/carrinho" data-testid="shopping-cart-button">
