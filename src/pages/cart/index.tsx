@@ -1,6 +1,7 @@
 function Cart() {
   const storedCart = localStorage.getItem('cart');
   const cartItems = storedCart ? JSON.parse(storedCart) : [];
+  localStorage.setItem('cart', JSON.stringify(cartItems));
 
   return (
     <div>
@@ -11,7 +12,6 @@ function Cart() {
             <div key={ index }>
               <p data-testid="shopping-cart-product-name">{item.title}</p>
               <p data-testid="shopping-cart-product-quantity">Quantidade: 1</p>
-              <p>{/* Adicione outros detalhes do produto, como preço */}</p>
             </div>
           ))}
         </div>

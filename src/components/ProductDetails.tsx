@@ -26,11 +26,21 @@ function ProductDetails() {
     fetchProductDetails();
   }, [id]);
 
+  // Função para adicionar o produto ao carrinho
+  const handleAddToCart = () => {
+    const existingCart = JSON.parse(localStorage.getItem('cart') || '[]') as Product[];
+    const updatedCart = [...existingCart, product];
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  };
+
   return (
     <div>
       <h1 data-testid="product-detail-name">{product.title}</h1>
       <img src={ product.image } alt="" data-testid="product-detail-image" />
       <p data-testid="product-detail-price">{product.price}</p>
+      <button onClick={ handleAddToCart } data-testid="product-detail-add-to-cart">
+        Adicionar ao Carrinho
+      </button>
       <Link to="/carrinho" data-testid="shopping-cart-button">
         Ir para o Carrinho
       </Link>
