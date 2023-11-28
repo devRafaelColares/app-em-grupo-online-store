@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 import CategoryList from '../components/CategoryList';
 import ProductList from '../components/ProductList';
-import { Category } from '../types';
+import { Category, Product } from '../types';
 
 // Componente principal da página inicial
 function Home() {
@@ -14,7 +14,7 @@ function Home() {
   // Estado para armazenar a string de consulta de pesquisa
   const [searchQuery, setSearchQuery] = useState<string>('');
   // Estado para armazenar a lista de produtos
-  const [productList, setProductList] = useState<any[]>([]);
+  const [productList, setProductList] = useState<Product[]>([]);
 
   // Efeito para carregar as categorias ao montar o componente
   useEffect(() => {
@@ -27,6 +27,14 @@ function Home() {
 
     fetchCategories();
   }, []);
+
+  const handleAddToCart = (productId: string) => {
+    // Lógica para adicionar o produto ao carrinho
+    const cartItem = productList.find((product) => product.id === productId);
+    const existingCart = JSON.parse(localStorage.getItem('cart') || '[]') as Product[];
+    const updatedCart = [...existingCart, cartItem];
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  };
 
   // Função para lidar com a mudança de categoria
   const handleCategoryChange = async (categoryId: string) => {
@@ -93,7 +101,7 @@ function Home() {
           Digite algum termo de pesquisa ou escolha uma categoria.
         </p>
       ) : (
-        <ProductList productList={ productList } />
+        <ProductList productList={ productList } onAddToCart={ handleAddToCart } />
       )}
       {/* Link para o carrinho de compras */}
       <Link to="/carrinho" data-testid="shopping-cart-button">

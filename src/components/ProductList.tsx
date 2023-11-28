@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ProductListProps } from '../types';
 
-function ProductList({ productList }: ProductListProps): JSX.Element {
+function ProductList({ productList, onAddToCart }: ProductListProps): JSX.Element {
   return (
     <div>
       {productList.map((product: any) => (
@@ -12,6 +12,12 @@ function ProductList({ productList }: ProductListProps): JSX.Element {
             Preço: $
             {product.price}
           </p>
+          <button
+            onClick={ () => onAddToCart(product.id) }
+            data-testid="product-add-to-cart"
+          >
+            Adicionar ao Carrinho
+          </button>
           <Link to={ `/product/${product.id}` } data-testid="product-detail-link">
             Detalhes do Produto
           </Link>
