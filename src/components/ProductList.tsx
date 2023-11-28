@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ProductListProps } from '../types';
 
 function ProductList({ productList }: ProductListProps): JSX.Element {
@@ -11,6 +12,9 @@ function ProductList({ productList }: ProductListProps): JSX.Element {
             Preço: $
             {product.price}
           </p>
+          <Link to={ `/product/${product.id}` } data-testid="product-detail-link">
+            Detalhes do Produto
+          </Link>
         </div>
       ))}
     </div>
